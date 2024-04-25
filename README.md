@@ -358,8 +358,8 @@ ad value: 6, UpdTted value: 7
 2. Explain The Readers–Writers Problem
    
     * The `Reader-Writer` Problem is a classic challenge in multi-threading application development where multiple threads need to access shared data. In this context, there are two types of tasks:
-    1. `Reader`: A task that only reads shared data without changing it.
-    2. `Writer`: Tasks that write or modify shared data.
+      - `Reader`: A task that only reads shared data without changing it.
+      - `Writer`: Tasks that write or modify shared data.
 
     * The challenge is how to coordinate access between readers and writers so that:
 
