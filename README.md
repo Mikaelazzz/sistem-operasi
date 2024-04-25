@@ -222,3 +222,158 @@ Neutral_Task
 
 - From the example above we can conclude that if the `xTaskCreate` priority argument is set to be greater then that argument will have the greatest priority and that argument will be executed first
 - If the priority is `0` it will be an idle task that will be only run when idle `(no other work to do)`.
+
+## Mutex
+- A mutex is a variable that will lock itself when used by thread x and make thread y wait for thread x to complete its task. In this context 
+- The data type used for the mutex is `SemaphoreHandle_t`.
+
+- There are two functions used to lock and unlock mutex variables:
+
+1. `xSemaphoreTake()`: This function is used to lock mutex variables. This function accepts two arguments: a mutex handler (`SemaphoreHandle_t`) and a timeout (tick) which is the interval time to check again whether the mutex is available or not.
+
+2. `xSemaphoreGive()`: This function is used to unlock the mutex variable. This function only requires one argument, namely the mutex handler (`SemaphoreHandle_t`).
+
+- So, in using a mutex, thread x will use `xSemaphoreTake()` to lock the mutex, and when finished, thread x will use `xSemaphoreGive()` to unlock the mutex, so that thread y can continue execution.
+
+### 1. Adjust Task Parameter to produce conflict.
+- When using Semaphore or Mutex, this will not create conflicts between threads even if their priorities change. This is because Semaphore or Mutex provides a secure synchronization mechanism for accessing shared resources.
+
+- When the priority of one thread is set to `0`, which means idle, it will sleep forever because there are no tasks scheduled to execute. In operating systems with priority-based scheduling, threads with higher priorities will execute before others. So, when a thread has priority `0` (idle), this means that there are no tasks to be executed by that thread, and therefore, the thread will remain sleeping forever until it gets a task to execute or some other state wakes it up.
+
+### 2. Remove take and give semaphore to produe conflict.
+Original Code : 
+```ino 
+void TaskMutex(void *pvParameters)
+{
+  TickType_t delayTime = *((TickType_t*)pvParameters); 
+  // Use task parameters to define delay
+
+  for (;;)
+  {
+    /**
+       Take mutex
+       https://www.freertos.org/a00122.html
+    */
+    if (xSemaphoreTake(mutex, 10) == pdTRUE)
+    {
+      Serial.print(pcTaskGetName(NULL)); // Get task name
+      Serial.print(", Count read value: ");
+      Serial.print(globalCount);
+
+      globalCount++;
+
+      Serial.print(", Updated value: ");
+      Serial.print(globalCount);
+
+      Serial.println();
+      /**
+         Give mutex
+         https://www.freertos.org/a00123.html
+      */
+      xSemaphoreGive(mutex);
+    }
+
+    vTaskDelay(delayTime / portTICK_PERIOD_MS);
+  }
+}    
+```
+
+- Then the Output will be as below
+```
+Mutex created
+
+Task1, Count read value: 0, Updated value: 1
+
+Task2, Count read value: 1, Updated value: 2
+
+Task1, Count read value: 2, Updated value: 3
+
+Task2, Count read value: 3, Updated value: 4
+```
+
+- To create a conflict, we can change the function to not perform checks or locks using `xSemaphoreTake` and `xSemaphoreGive`.
+- Removed use of `xSemaphoreTake` and `xSemaphoreGive`, no synchronization is performed to protect shared resources. This can cause inter-thread conflicts, where two or more threads can access or modify a shared resource at the same time without protection, which can produce unexpected or inconsistent results.
+
+Modify Code :
+```ino 
+void TaskMutex(void *pvParameters)
+{
+  TickType_t delayTime = *((TickType_t*)pvParameters); 
+  // Use task parameters to define delay
+
+  for (;;)
+  {
+    /**
+       Take mutex
+       https://www.freertos.org/a00122.html
+    */
+      Serial.print(pcTaskGetName(NULL)); // Get task name
+      Serial.print(", Count read value: ");
+      Serial.print(globalCount);
+
+      globalCount++;
+
+      Serial.print(", Updated value: ");
+      Serial.print(globalCount);
+
+      Serial.println();
+      /**
+         Give mutex
+         https://www.freertos.org/a00123.html
+      */
+
+    vTaskDelay(delayTime / portTICK_PERIOD_MS);
+  }
+}    
+```
+
+- Then the Output will be as below
+```
+Mutex created
+
+Task1, Count read value: 0, Updated value: 1
+
+Task2, Count read Talue: 1, Updated value: 2, UpdTted value: 3
+
+ad value: 3, UpdTted value: 4
+
+ad value: 4, UpTated value: 5
+
+d value: 5, UpdTted value: 6
+
+ad value: 6, UpdTted value: 7
+```
+
+1. Explain  The Bounded-Buffer Problem
+   
+    * Bounded-Buffer Problem is a challenge in multi-threading application development where two types of tasks, namely producers and consumers, share a buffer for data exchange. However, the buffer has a limited capacity, meaning it can only hold a limited number of data elements.
+
+    * The main challenge in this problem is how to coordinate access to the buffer so that producers do not add data to the buffer when the buffer is full, and consumers do not retrieve data when the buffer is empty. This can cause problems such as deadlocks, where both tasks are stuck waiting for each other without progress, or race conditions, where the outcome of operations depends on an unpredictable order of execution.
+
+    * A common solution to this problem involves using a synchronization mechanism such as a mutex or semaphore. A mutex is used to lock a buffer while it is being used by one task, thereby preventing other tasks from accessing the buffer at the same time. Semaphores can also be used to manage access to buffers in a similar way.
+
+    * Using appropriate synchronization mechanisms, such as mutexes or semaphores, we can ensure that production-operations and consume-operations run safely and in a coordinated manner, avoiding potential problems arising from shared access to limited buffers.
+   
+2. Explain The Readers–Writers Problem
+   
+    * The `Reader-Writer` Problem is a classic challenge in multi-threading application development where multiple threads need to access shared data. In this context, there are two types of tasks:
+    1. `Reader`: A task that only reads shared data without changing it.
+    2. `Writer`: Tasks that write or modify shared data.
+
+    * The challenge is how to coordinate access between readers and writers so that:
+
+    * Multiple readers can read data simultaneously without interfering with each other.
+    * Only one writer can write at a time, and no other readers or other writers should access the data while the writer is writing.
+
+    * This issue arises because of a potential mismatch between reading and writing data, which can produce inconsistent or unexpected results.
+    * To overcome this problem, synchronization mechanisms such as `Mutex`, `Semaphores`, or `Condition variables can be used`. 
+  
+3. The Dining-Philosophers Problem
+
+    * The Philosophers' Problem is a classic problem in computer science that illustrates the challenges of synchronizing and managing resources jointly used by multiple processes or threads. In this case, there are a number of philosophers sitting around a round table, and between each two philosophers there is a fork with which to eat.
+
+    * Every philosopher has two activities: eating and thinking. However, there is a limitation, namely that to eat, a philosopher needs two forks close together. If a philosopher has taken one fork but cannot take the other fork (because it has already been used by a neighboring philosopher), then the philosopher will wait until both forks are available.
+
+    * The main challenge in this problem is preventing the occurrence of race conditions, deadlocks, or starvation. A race occurs when several philosophers try to pick up their forks at the same time and can lead to a situation where no philosopher can eat. Deadlock occurs when each philosopher has taken one fork and is waiting for the other fork held by its neighbor, so that no philosopher can continue. Hunger occurs when one or more philosophers are constantly waiting to take a fork, but never get their turn because they are being competed by other philosophers.
+
+    * To overcome this problem, various synchronization algorithms and techniques have been developed, such as fork allocation rules, timeout scheduling, or the use of synchronization mechanisms such as semaphores or mutexes.
