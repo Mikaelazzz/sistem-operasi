@@ -224,6 +224,7 @@ Neutral_Task
 - If the priority is `0` it will be an idle task that will be only run when idle `(no other work to do)`.
 
 ## Mutex
+Source from : [Wokwi](https://wokwi.com/projects/395466103682715649)
 - A mutex is a variable that will lock itself when used by thread x and make thread y wait for thread x to complete its task. In this context 
 - The data type used for the mutex is `SemaphoreHandle_t`.
 
