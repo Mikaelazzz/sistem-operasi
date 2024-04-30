@@ -381,7 +381,7 @@ ad value: 6, UpdTted value: 7
 
 ## Multithreading
 
-Multithreading allows an application to divide its tasks into individual threads. In multi-threading, the same process or task can be performed by any number of threads, or we can say that there is more than one thread to execute the task in multi-threading. By using multi-threading, multitasking can be achieved.
+Multithreading is the ability of an application to divide its tasks into individual threads. In multithreading, one process or task can be carried out by several threads, or we can say that there is more than one thread to carry out the task. By using multithreading, multitasking can be achieved.
 
 Thread Models:
 
