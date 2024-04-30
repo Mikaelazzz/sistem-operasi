@@ -345,7 +345,7 @@ d value: 5, UpdTted value: 6
 ad value: 6, UpdTted value: 7
 ```
 
-1. Explain  The Bounded-Buffer Problem
+1.  The Bounded-Buffer Problem
    
     * Bounded-Buffer Problem is a challenge in multi-threading application development where two types of tasks, namely producers and consumers, share a buffer for data exchange. However, the buffer has a limited capacity, meaning it can only hold a limited number of data elements.
 
@@ -355,7 +355,7 @@ ad value: 6, UpdTted value: 7
 
     * Using appropriate synchronization mechanisms, such as mutexes or semaphores, we can ensure that production-operations and consume-operations run safely and in a coordinated manner, avoiding potential problems arising from shared access to limited buffers.
    
-2. Explain The Readers–Writers Problem
+2.  The Readers–Writers Problem
    
     * The `Reader-Writer` Problem is a classic challenge in multi-threading application development where multiple threads need to access shared data. In this context, there are two types of tasks:
       - `Reader`: A task that only reads shared data without changing it.
@@ -378,3 +378,16 @@ ad value: 6, UpdTted value: 7
     * The main challenge in this problem is preventing the occurrence of race conditions, deadlocks, or starvation. A race occurs when several philosophers try to pick up their forks at the same time and can lead to a situation where no philosopher can eat. Deadlock occurs when each philosopher has taken one fork and is waiting for the other fork held by its neighbor, so that no philosopher can continue. Hunger occurs when one or more philosophers are constantly waiting to take a fork, but never get their turn because they are being competed by other philosophers.
 
     * To overcome this problem, various synchronization algorithms and techniques have been developed, such as fork allocation rules, timeout scheduling, or the use of synchronization mechanisms such as semaphores or mutexes.
+
+## Multithreading
+
+Multithreading allows an application to divide its tasks into individual threads. In multi-threading, the same process or task can be performed by any number of threads, or we can say that there is more than one thread to execute the task in multi-threading. By using multi-threading, multitasking can be achieved.
+
+Thread Models:
+
+1. Many to One:
+In this model, the program uses only one kernel thread which is managed by the operating system. This kernel thread is responsible for handling all thread activities created by the program. When a program needs a new thread, the kernel thread creates and manages userspace threads to handle additional tasks. This approach is more efficient in resource usage because there is only one kernel thread that needs to be managed.
+2. One to Many:
+In this model, every time a program needs a new thread, it creates a new kernel thread in the operating system. This means that each program thread has its own kernel thread at the operating system level. This approach allows high parallelism because each thread can execute independently. However, this approach can also be resource intensive because each thread has overhead associated with its own kernel thread.
+3. Many to Many:
+This model is a combination of the two previous approaches. The program has the flexibility to create both kernel threads and userspace threads as needed. With this approach, programs can optimize resource usage by creating kernel threads when needed for high performance, or using userspace threads for lighter tasks. This provides a balance between efficiency and flexibility in thread management.
