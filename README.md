@@ -393,3 +393,17 @@ In this model, every time a program needs a new thread, it creates a new kernel 
 This model is a combination of the two previous approaches. The program has the flexibility to create both kernel threads and userspace threads as needed. With this approach, programs can optimize resource usage by creating kernel threads when needed for high performance, or using userspace threads for lighter tasks. This provides a balance between efficiency and flexibility in thread management.
 
 ## Using the FreeRTOS API from an ISR
+- `XHigherPriorityTaskWoken` is a variable often used in embedded systems programming, particularly with real-time operating systems (RTOS) such as FreeRTOS. It's typically associated with interrupt service routines (ISRs) and task scheduling.
+- `xQueueSendToBack()` is a part of the FreeRTOS API and is commonly used in embedded systems programming, particularly in applications utilizing queues for inter-task communication.
+
+This function is used to send an item to the back of a queue. It allows a task to send data to another task or interrupt service routine (ISR) by placing the data at the end of the queue. The queue is typically used for passing messages, events, or other data between tasks or between an ISR and a task in a multitasking environment.
+
+Basic explanation of how `xQueueSendToBack()` works:
+
+  1. The function takes as parameters a handle to the queue (`QueueHandle_t`) and a pointer to the data item being sent.
+  2. If the queue is not full, the data item is copied into the queue at the next available position.
+  3. If the queue is full, the function may block the calling task (if blocking is enabled) until space becomes available in the queue, or it may return an error code indicating that the    operation could not be completed.
+  4. If the operation is successful, the function returns a value indicating success (often `pdPASS` in FreeRTOS) or a failure code if the operation could not be completed.
+
+Overall, `xQueueSendToBack()` is a fundamental function for passing data between tasks in real-time embedded systems, ensuring that tasks can communicate efficiently and reliably within the constraints of a multitasking environment.
+
