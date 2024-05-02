@@ -391,3 +391,5 @@ In this model, the program uses only one kernel thread which is managed by the o
 In this model, every time a program needs a new thread, it creates a new kernel thread in the operating system. This means that each program thread has its own kernel thread at the operating system level. This approach allows high parallelism because each thread can execute independently. However, this approach can also be resource intensive because each thread has overhead associated with its own kernel thread.
 3. Many to Many:
 This model is a combination of the two previous approaches. The program has the flexibility to create both kernel threads and userspace threads as needed. With this approach, programs can optimize resource usage by creating kernel threads when needed for high performance, or using userspace threads for lighter tasks. This provides a balance between efficiency and flexibility in thread management.
+
+## Using the FreeRTOS API from an ISR
