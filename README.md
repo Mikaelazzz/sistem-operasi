@@ -392,18 +392,75 @@ In this model, every time a program needs a new thread, it creates a new kernel 
 3. Many to Many:
 This model is a combination of the two previous approaches. The program has the flexibility to create both kernel threads and userspace threads as needed. With this approach, programs can optimize resource usage by creating kernel threads when needed for high performance, or using userspace threads for lighter tasks. This provides a balance between efficiency and flexibility in thread management.
 
-## Using the FreeRTOS API from an ISR
-- `XHigherPriorityTaskWoken` is a variable often used in embedded systems programming, particularly with real-time operating systems (RTOS) such as FreeRTOS. It's typically associated with interrupt service routines (ISRs) and task scheduling.
-- `xQueueSendToBack()` is a part of the FreeRTOS API and is commonly used in embedded systems programming, particularly in applications utilizing queues for inter-task communication.
+## The xSemaphoreCreateCounting() API Function
+### Exercise Using a counting semaphore to synchronize a task with an interrupt
+```ino
+#include <Arduino_FreeRTOS.h>
+#include <semphr.h>
 
-This function is used to send an item to the back of a queue. It allows a task to send data to another task or interrupt service routine (ISR) by placing the data at the end of the queue. The queue is typically used for passing messages, events, or other data between tasks or between an ISR and a task in a multitasking environment.
+// Buat counting semaphore dengan nilai awal 5
+SemaphoreHandle_t countedSemaphore = xSemaphoreCreateCounting(5, 5);
 
-Basic explanation of how `xQueueSendToBack()` works:
+void taskUseSemaphore(void *pvParameters) {
+  while (1) {
+    // Coba ambil sumber daya dari counting semaphore
+    if (xSemaphoreTake(countedSemaphore, portMAX_DELAY) == pdTRUE) {
+      Serial.println("Resources acquired");
+      // Simulasikan penggunaan sumber daya
+      delay(1000);
+      Serial.println("Resources are returned");
+      // Kembalikan sumber daya ke counting semaphore
+      xSemaphoreGive(countedSemaphore);
+    } else {
+      Serial.println("The resource is not available");
+    }
+    delay(500);
+  }
+}
 
-  1. The function takes as parameters a handle to the queue (`QueueHandle_t`) and a pointer to the data item being sent.
-  2. If the queue is not full, the data item is copied into the queue at the next available position.
-  3. If the queue is full, the function may block the calling task (if blocking is enabled) until space becomes available in the queue, or it may return an error code indicating that the    operation could not be completed.
-  4. If the operation is successful, the function returns a value indicating success (often `pdPASS` in FreeRTOS) or a failure code if the operation could not be completed.
+void setup() {
+  Serial.begin(115200);
 
-Overall, `xQueueSendToBack()` is a fundamental function for passing data between tasks in real-time embedded systems, ensuring that tasks can communicate efficiently and reliably within the constraints of a multitasking environment.
+  // Buat task yang akan menggunakan counting semaphore
+  xTaskCreate(taskUseSemaphore, "SemaphoreTask", 128, NULL, 1, NULL);
+}
+
+void loop() {
+  // FreeRTOS akan mengelola task secara otomatis
+}
+```
+- Then the Output will be as below
+```
+Simulation
+
+Resources acquired
+Resources are returned
+```
+
+- If the argument value is changed to (10,0)
+  - Modify Code 
+```ino
+SemaphoreHandle_t countedSemaphore = xSemaphoreCreateCounting(10, 0);
+```
+  1. The result of this code is that it doesn't display anything
+  2. Which means the value 10 is the maximum count
+  3. And 0 is the initial value of the semaphore count
+
+- if the code is executed with condition (10,5)
+```ino
+SemaphoreHandle_t countedSemaphore = xSemaphoreCreateCounting(10, 5);
+```
+- Then the Output will be as below
+```
+Simulation
+
+Resources acquired
+Resources are returned
+```
+- By changing the initial value to 5, the taskUseSemaphore task will successfully retrieve resources from the counting semaphore, and you will see the output "Resources acquired" and "Resources are returned" in Serial Monitor.
+
+- `SemaphoreHandle_t countedSemaphore = xSemaphoreCreateCounting(10, 0);` create a semaphore count from the maximum value and initial value
+- `void taskUseSemaphore(void *pvParameters)` task function that will try to retrieve and return from the counting semaphore.
+- `taskUseSemaphore()` there is an infinite loop that tries to take from the counting semaphore using
+- `xSemaphoreTake(countedSemaphore, portMAX_DELAY)` If the resource is successfully obtained, the function will print "Resources acquired", delay for 1 second (resource usage simulation), print "Resources are returned", and return the resource to the counting semaphore using
 
