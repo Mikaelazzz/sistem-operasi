@@ -431,10 +431,32 @@ void loop() {
 ```
 - Then the Output will be as below
 ```
-Simulation
-
+...
 Resources acquired
 Resources are returned
+...
+```
+- Fetching resources from a `semaphore` using the `xSemaphoreTake()` function.
+- If the resource is successful `(semaphore value > 0)`, the `semaphore` value will be reduced by 1, and the code can use the resource.
+```ino
+...
+if (xSemaphoreTake(countedSemaphore, portMAX_DELAY) == pdTRUE) {
+}
+...
+```
+- Returns resources to the `semaphore` using the `xSemaphoreGive()` function.
+- This will increase the `semaphore value by 1`, so that the resource can be used by `other tasks or interrupts`.
+```ino
+...
+xSemaphoreGive(countedSemaphore);
+...
+```
+- Create a new task that will use the `counting semaphore`.
+- This task will run in an `infinite loop`, trying to retrieve resources from the `semaphore`, use those resources, and then return them to the semaphore.
+```ino
+...
+xTaskCreate(taskUseSemaphore, "SemaphoreTask", 128, NULL, 1, NULL);
+...
 ```
 
 - If the argument value is changed to (10,0)
