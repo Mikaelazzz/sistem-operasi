@@ -1,7 +1,10 @@
 # Sistem-Operasi
-## Task  : How do the Task No. x behaves by setting and modifying the Priority if we have the same delay and the same duration
+## xTaskCreate
+_Task  : How do the Task No. x behaves by setting and modifying the Priority if we have the same delay and the same duration_
 
 Source from : [Wokwi](https://wokwi.com/projects/394199274175749121)
+
+Example Code :
 ```ino
 /*
   The original code:
@@ -395,6 +398,8 @@ This model is a combination of the two previous approaches. The program has the 
 ## The xSemaphoreCreateCounting() API Function | Example 7.2
 ### Exercise Using a counting semaphore to synchronize a task with an interrupt
 Source from : [Wokwi](https://wokwi.com/projects/new/arduino-uno)
+
+Example Code :
 ```ino
 #include <Arduino_FreeRTOS.h>
 #include <semphr.h>
