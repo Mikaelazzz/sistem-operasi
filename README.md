@@ -392,8 +392,9 @@ In this model, every time a program needs a new thread, it creates a new kernel 
 3. Many to Many:
 This model is a combination of the two previous approaches. The program has the flexibility to create both kernel threads and userspace threads as needed. With this approach, programs can optimize resource usage by creating kernel threads when needed for high performance, or using userspace threads for lighter tasks. This provides a balance between efficiency and flexibility in thread management.
 
-## The xSemaphoreCreateCounting() API Function
+## The xSemaphoreCreateCounting() API Function | Example 7.2
 ### Exercise Using a counting semaphore to synchronize a task with an interrupt
+Source from : [Wokwi](https://wokwi.com/projects/new/arduino-uno)
 ```ino
 #include <Arduino_FreeRTOS.h>
 #include <semphr.h>
