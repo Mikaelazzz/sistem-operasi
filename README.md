@@ -463,7 +463,9 @@ xTaskCreate(taskUseSemaphore, "SemaphoreTask", 128, NULL, 1, NULL);
 - If the argument value is changed to (10,0)
   - Modify Code 
 ```ino
+...
 SemaphoreHandle_t countedSemaphore = xSemaphoreCreateCounting(10, 0);
+...
 ```
   1. The result of this code is that it doesn't display anything
   2. Which means the value 10 is the maximum count
@@ -471,19 +473,21 @@ SemaphoreHandle_t countedSemaphore = xSemaphoreCreateCounting(10, 0);
 
 - if the code is executed with condition (10,5)
 ```ino
+...
 SemaphoreHandle_t countedSemaphore = xSemaphoreCreateCounting(10, 5);
+...
 ```
 - Then the Output will be as below
 ```
-Simulation
-
+...
 Resources acquired
 Resources are returned
+...
 ```
-- By changing the initial value to 5, the taskUseSemaphore task will successfully retrieve resources from the counting semaphore, and you will see the output "Resources acquired" and "Resources are returned" in Serial Monitor.
+- By changing the initial value to 5, the `taskUseSemaphore` task will successfully retrieve resources from the `counting semaphore`, and you will see the output "Resources acquired" and "Resources are returned" in `Serial Monitor`.
 
-- `SemaphoreHandle_t countedSemaphore = xSemaphoreCreateCounting(10, 0);` create a semaphore count from the maximum value and initial value
-- `void taskUseSemaphore(void *pvParameters)` task function that will try to retrieve and return from the counting semaphore.
-- `taskUseSemaphore()` there is an infinite loop that tries to take from the counting semaphore using
-- `xSemaphoreTake(countedSemaphore, portMAX_DELAY)` If the resource is successfully obtained, the function will print "Resources acquired", delay for 1 second (resource usage simulation), print "Resources are returned", and return the resource to the counting semaphore using
+- `SemaphoreHandle_t countedSemaphore = xSemaphoreCreateCounting(10, 0);` create a semaphore count from the `maximum value` and `initial value`
+- `void taskUseSemaphore(void *pvParameters)` task function that will try to retrieve and return from the `counting semaphore`.
+- `taskUseSemaphore()` there is an `infinite loop` that tries to take from the `counting semaphore` using
+- `xSemaphoreTake(countedSemaphore, portMAX_DELAY)` If the resource is successfully obtained, the function will print "Resources acquired", delay for 1 second (resource usage simulation), print "Resources are returned", and return the resource to the `counting semaphore` using
 
