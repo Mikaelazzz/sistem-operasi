@@ -1,4 +1,4 @@
-# Sistem-Operasi noted 
+# Sistem-Operasi Noted 
 ## xTaskCreate
 _Task  : How do the Task No. x behaves by setting and modifying the Priority if we have the same delay and the same duration_
 
