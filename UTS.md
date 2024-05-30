@@ -1,5 +1,15 @@
 ## The xSemaphoreCreateCounting() API Function | Example 7.2
-### Exercise Using a counting semaphore to synchronize a task with an interrupt
+### xSemaphoreCreateCounting() fungsi API dalam FreeR-
+TOS yang digunakan untuk membuat sebuah count-
+ing semaphore. Fungsi ini memiliki dua parameter:
+nilai maksimum semaphore dan nilai awal semaphore.
+Counting semaphore adalah jenis semaphore khusus
+yang memungkinkan beberapa tugas (task) atau in-
+terupsi untuk mengakses sumber daya yang terbatas
+secara bersamaan, di mana jumlah sumber daya yang
+tersedia direpresentasikan oleh nilai counting semaphore.
+### Memahami penggunaan counting semaphore dalam FreeRTOS
+Counting semaphore digunakan untuk mengontrol akses sumber daya yang terbatas oleh beberapa tugas (task) atau interupsi. Jumlah sumber daya yang tersedia direpresentasikan oleh nilai counting semaphore.
 Source from : [Wokwi](https://wokwi.com/projects/new/arduino-uno)
 
 Example Code :
