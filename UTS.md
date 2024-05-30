@@ -10,6 +10,7 @@ secara bersamaan, di mana jumlah sumber daya yang
 tersedia direpresentasikan oleh nilai counting semaphore.
 ### Memahami penggunaan counting semaphore dalam FreeRTOS
 Counting semaphore digunakan untuk mengontrol akses sumber daya yang terbatas oleh beberapa tugas (task) atau interupsi. Jumlah sumber daya yang tersedia direpresentasikan oleh nilai counting semaphore.
+
 Source from : [Wokwi](https://wokwi.com/projects/new/arduino-uno)
 
 Example Code :
